@@ -1,6 +1,6 @@
 streamlit
-tensorflow-cpu
-huggingface_hub
+tensorflow-cpu==2.15.1
+huggingface_hub==0.23.2
 google-generativeai
 pillow
-numpy
+numpy<2.0.0
