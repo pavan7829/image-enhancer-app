@@ -176,17 +176,28 @@ def build_enhanced_unet(input_shape=(None, None, 3), num_filters=48):
 # --- Load Model from Google Drive ---
 @st.cache_resource
 def load_model():
-    model_path = "denoising_model.keras"
-    
-    # Load the model directly from your local folder
-    model = tf.keras.models.load_model(
-        model_path,
-        custom_objects={
-            'combined_loss': combined_loss,
-            'psnr_metric': psnr_metric,
-            'ssim_metric': ssim_metric
-        }
-    )
+    model_path = "best_low_light_model.keras"
+    file_id = "1ACkFRmSd57xBMcVBQJHFMjN8dykPMxs8"  # ✅ Updated file ID
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    if not os.path.exists(model_path):
+        with st.spinner("Downloading model from Google Drive..."):
+            gdown.download(url, model_path, quiet=False)
+
+    try:
+        model = tf.keras.models.load_model(
+            model_path,
+            custom_objects={
+                'combined_loss': combined_loss,
+                'psnr_metric': psnr_metric,
+                'ssim_metric': ssim_metric
+            }
+        )
+    except Exception:
+        model = build_enhanced_unet(input_shape=(None, None, 3), num_filters=48)
+        model.compile(optimizer='adam', loss=combined_loss, metrics=[psnr_metric, ssim_metric])
+        model.load_weights(model_path)
+
     return model
 
 # --- Enhance Image ---
