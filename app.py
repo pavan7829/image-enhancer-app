@@ -4,6 +4,10 @@ import numpy as np
 from PIL import Image
 import io
 import os
+import subprocess
+
+subprocess.run(["pip", "install", "gdown"])
+import gdown
 
 st.set_page_config(
     page_title="Low Light Image Enhancement",
@@ -176,7 +180,7 @@ def build_enhanced_unet(input_shape=(None, None, 3), num_filters=48):
 # --- Load Model from Google Drive ---
 @st.cache_resource
 def load_model():
-    model_path = "best_low_light_model.keras"
+    model_path = "denoising_model.keras"
     file_id = "1ACkFRmSd57xBMcVBQJHFMjN8dykPMxs8"  # ✅ Updated file ID
     url = f"https://drive.google.com/uc?id={file_id}"
 
